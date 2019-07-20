@@ -234,31 +234,32 @@ open class BMPlayerControlView: UIView {
     open func controlViewAnimation(isShow: Bool) {
         let alpha: CGFloat = isShow ? 1.0 : 0.0
         self.isMaskShowing = isShow
-        UIView.animate(withDuration: 0.3, animations: {
-            self.topMaskView.alpha    = alpha
-            self.bottomMaskView.alpha = alpha
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+          guard let `self` = self else { return }
+          self.topMaskView.alpha    = alpha
+          self.bottomMaskView.alpha = alpha
 
-            self.mainMaskView.backgroundColor = UIColor ( red: 0.0, green: 0.0, blue: 0.0, alpha: isShow ? 0.4 : 0.0)
+          self.mainMaskView.backgroundColor = UIColor ( red: 0.0, green: 0.0, blue: 0.0, alpha: isShow ? 0.4 : 0.0)
 
-            if isShow {
-                if self.isFullscreen { self.chooseDefinitionView.alpha = 1.0 }
+          if isShow {
+            if self.isFullscreen { self.chooseDefinitionView.alpha = 1.0 }
+          } else {
+            self.replayButton.isHidden = true
+
+            if #available(iOS 9.0, *) {
+                self.chooseDefinitionHeightConstraint.isActive = false
+                self.chooseDefinitionHeightConstraint = self.chooseDefitionView.heightAnchor.constraint(equalToConstant: 35)
+                self.chooseDefinitionHeightConstraint.isActive = true
             } else {
-                self.replayButton.isHidden = true
+                fatalError(BMError.version.rawValue)
 
-                if #available(iOS 9.0, *) {
-                    self.chooseDefinitionHeightConstraint.isActive = false
-                    self.chooseDefinitionHeightConstraint = self.chooseDefitionView.heightAnchor.constraint(equalToConstant: 35)
-                    self.chooseDefinitionHeightConstraint.isActive = true
-                } else {
-                    fatalError(BMError.version.rawValue)
-
-                }
-                self.chooseDefinitionView.alpha = 0.0
             }
-            self.layoutIfNeeded()
-        }) { (_) in
+            self.chooseDefinitionView.alpha = 0.0
+          }
+          self.layoutIfNeeded()
+        }) { [weak self](_) in
             if isShow {
-                self.autoFadeOutControlViewWithAnimation()
+                self?.autoFadeOutControlViewWithAnimation()
             }
         }
     }
@@ -317,15 +318,15 @@ open class BMPlayerControlView: UIView {
     
     open func showCover(url: URL?) {
         if let url = url {
-            DispatchQueue.global(qos: .default).async {
+            DispatchQueue.global(qos: .default).async { [weak self] in
                 let data = try? Data(contentsOf: url)
-                DispatchQueue.main.async(execute: {
+                DispatchQueue.main.async(execute: { [weak self] in
                     if let data = data {
-                        self.maskImageView.image = UIImage(data: data)
+                        self?.maskImageView.image = UIImage(data: data)
                     } else {
-                        self.maskImageView.image = nil
+                        self?.maskImageView.image = nil
                     }
-                    self.hideLoader()
+                    self?.hideLoader()
                 });
             }
         }
@@ -461,8 +462,8 @@ open class BMPlayerControlView: UIView {
         chooseDefinitionHeightConstraint = chooseDefitionView.heightAnchor.constraint(equalToConstant: CGFloat(height))
         chooseDefinitionHeightConstraint.isActive = true
         
-        UIView.animate(withDuration: 0.3, animations: {
-            self.layoutIfNeeded()
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+            self?.layoutIfNeeded()
         })
         isSelectDefinitionViewOpened = !isSelectDefinitionViewOpened
         if selectedIndex != button.tag {

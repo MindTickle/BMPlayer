@@ -356,10 +356,10 @@ open class BMPlayerLayerView: UIView {
                         self.state = .buffering
                         if shouldSeekTo != 0 {
                             print("BMPlayerLayer | Should seek to \(shouldSeekTo)")
-                            seek(to: shouldSeekTo, completion: {
-                                self.shouldSeekTo = 0
-                                self.hasReadyToPlay = true
-                                self.state = .readyToPlay
+                            seek(to: shouldSeekTo, completion: { [weak self] in
+                                self?.shouldSeekTo = 0
+                                self?.hasReadyToPlay = true
+                                self?.state = .readyToPlay
                             })
                         } else {
                             self.hasReadyToPlay = true
@@ -432,16 +432,15 @@ open class BMPlayerLayerView: UIView {
         player?.pause()
         let popTime = DispatchTime.now() + Double(Int64( Double(NSEC_PER_SEC) * 1.0 )) / Double(NSEC_PER_SEC)
         
-        DispatchQueue.main.asyncAfter(deadline: popTime) {
-            
+        DispatchQueue.main.asyncAfter(deadline: popTime) { [weak self] in
             // 如果执行了play还是没有播放则说明还没有缓存好，则再次缓存一段时间
-            self.isBuffering = false
-            if let item = self.playerItem {
+            self?.isBuffering = false
+            if let item = self?.playerItem {
                 if !item.isPlaybackLikelyToKeepUp {
-                    self.bufferingSomeSecond()
+                    self?.bufferingSomeSecond()
                 } else {
                     // 如果此时用户已经暂停了，则不再需要开启播放了
-                    self.state = BMPlayerState.bufferFinished
+                    self?.state = BMPlayerState.bufferFinished
                 }
             }
         }
