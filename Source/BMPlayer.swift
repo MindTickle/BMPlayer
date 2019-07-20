@@ -100,7 +100,7 @@ open class BMPlayer: UIView {
     fileprivate var isMaskShowing   = false
     fileprivate var isSlowed        = false
     fileprivate var isMirrored      = false
-    fileprivate var isPlayToTheEnd  = false
+    fileprivate var isPlayToTheEnd  = true
     //视频画面比例
     fileprivate var aspectRatio: BMPlayerAspectRatio = .default
     
