@@ -734,7 +734,7 @@ open class BMPlayerControlView: UIView {
           }
         }
 
-        subtitleBackView.snp.makeConstraints { (make) in
+        subtitleBackView.snp.makeConstraints { [weak self](make) in
           if let `self` = self {
             make.bottom.equalTo(self.snp.bottom).offset(-5)
             make.centerX.equalTo(self.snp.centerX)
