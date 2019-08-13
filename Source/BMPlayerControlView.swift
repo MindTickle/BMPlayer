@@ -113,7 +113,15 @@ open class BMPlayerControlView: UIView {
     
     /// Gesture used to show / hide control view
     open var tapGesture: UITapGestureRecognizer!
-    
+  
+    open var mainMaskOverlayAlpha: CGFloat {
+      get {
+        return 0.4
+      }
+    }
+  
+    open var stickyBottomBar: Bool = false
+  
     // MARK: - handle player state change
     /**
      call on when play time changed, update duration here
@@ -230,14 +238,11 @@ open class BMPlayerControlView: UIView {
     open func controlViewAnimation(isShow: Bool) {
         let alpha: CGFloat = isShow ? 1.0 : 0.0
         self.isMaskShowing = isShow
-        
-        UIApplication.shared.setStatusBarHidden(!isShow, with: .fade)
-        
         UIView.animate(withDuration: 0.3, animations: {[weak self] in
           guard let `self` = self else { return }
           self.topMaskView.alpha    = alpha
-          self.bottomMaskView.alpha = alpha
-          self.mainMaskView.backgroundColor = UIColor ( red: 0.0, green: 0.0, blue: 0.0, alpha: isShow ? 0.4 : 0.0)
+          self.bottomMaskView.alpha = self.stickyBottomBar ? 1.0 : alpha
+          self.mainMaskView.backgroundColor = UIColor ( red: 0.0, green: 0.0, blue: 0.0, alpha: isShow ? self.mainMaskOverlayAlpha : 0.0)
           
           if isShow {
               if self.isFullscreen { self.chooseDefitionView.alpha = 1.0 }
