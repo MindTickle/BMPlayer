@@ -175,7 +175,7 @@ open class BMPlayerLayerView: UIView {
             break
         case .aspectFill:
           self.playerLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-          self.playerLayer?.frame  = self.bounds
+          self.playerLayer?.frame  = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
           break
         case .sixteen2NINE:
             self.playerLayer?.videoGravity = AVLayerVideoGravity.resize
