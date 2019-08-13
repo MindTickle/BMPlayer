@@ -38,6 +38,7 @@ public enum BMPlayerState {
  */
 public enum BMPlayerAspectRatio : Int {
     case `default`    = 0
+    case aspectFill
     case sixteen2NINE
     case four2THREE
 }
@@ -87,7 +88,7 @@ open class BMPlayerLayerView: UIView {
         }
     }
     
-    var aspectRatio:BMPlayerAspectRatio = .default {
+    open var aspectRatio:BMPlayerAspectRatio = .default {
         didSet {
             self.setNeedsLayout()
         }
@@ -172,6 +173,10 @@ open class BMPlayerLayerView: UIView {
             self.playerLayer?.videoGravity = AVLayerVideoGravity.resizeAspect
             self.playerLayer?.frame  = self.bounds
             break
+        case .aspectFill:
+          self.playerLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
+          self.playerLayer?.frame  = self.bounds
+          break
         case .sixteen2NINE:
             self.playerLayer?.videoGravity = AVLayerVideoGravity.resize
             self.playerLayer?.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.width/(16/9))
