@@ -120,7 +120,11 @@ open class BMPlayerControlView: UIView {
       }
     }
   
-    open var stickyBottomBar: Bool = false
+    open var stickyBottomBar: Bool {
+      get {
+        return false
+      }
+    }
   
     // MARK: - handle player state change
     /**
