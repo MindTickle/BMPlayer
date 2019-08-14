@@ -465,7 +465,7 @@ open class BMPlayerControlView: UIView {
     }
     
     // MARK: - Init
-    override public init(frame: CGRect) {
+    override required public init(frame: CGRect) {
         super.init(frame: frame)
         setupUIComponents()
         addSnapKitConstraint()
